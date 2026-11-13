@@ -4,7 +4,7 @@
 Noël, Pâques, Classique, Événement
 
 ## Régimes
-Classique, Végétarien, Vegan, Sans gluten
+Classique, Végétarien, Végan
 
 ## Les 14 allergènes à déclaration obligatoire
 1. Gluten
@@ -58,36 +58,42 @@ Classique, Végétarien, Vegan, Sans gluten
 
 ## Menus
 
-| N° | Menu | Thème | Régime | Min. pers. | Prix pour le minimum | Stock | Composition |
-|---|---|---|---|---|---|---|---|
-| M1 | Réveillon de Noël | Noël | Classique | 6 | 174 € | 12 | E1, P1, D1 |
-| M2 | Noël végétarien | Noël | Végétarien | 4 | 100 € | 8 | E3, P3, D1 |
-| M3 | Brunch de Pâques | Pâques | Classique | 6 | 150 € | 10 | E6, P2, D2 |
-| M4 | Pâques en famille (vegan) | Pâques | Vegan | 4 | 88 € | 6 | E5, P4, D4 |
-| M5 | Déjeuner bordelais | Classique | Classique | 2 | 56 € | 20 | E7, P7, D5 |
-| M6 | Table végétarienne | Classique | Végétarien | 2 | 48 € | 15 | E3, P3, D3 |
-| M7 | Cocktail d'entreprise | Événement | Classique | 10 | 320 € | 5 | E2, P6, D6 |
-| M8 | Buffet de mariage sans gluten | Événement | Sans gluten | 20 | 760 € | 3 | E2, P7, D6 |
+Source de référence : maquettes Figma 02-Menus et 07-Commande (bureau et mobile). Le prix affiché est le prix pour le nombre minimum de personnes.
 
-### Descriptions
-- M1 Réveillon de Noël : Le grand classique de Julie et José : foie gras, chapon fermier et bûche maison. Un repas de fête complet, livré prêt à réchauffer.
-- M2 Noël végétarien : Un Noël sans viande mais avec tout le goût : velouté de potimarron, risotto aux cèpes du Médoc et bûche chocolat-praliné.
-- M3 Brunch de Pâques : Asperges des Landes, agneau de Pauillac cuit sept heures et nid de Pâques chocolaté : le déjeuner de printemps par excellence.
-- M4 Pâques en famille (vegan) : Fraîcheur et douceur : tartare de légumes croquants, curry au lait de coco et salade de fruits à la menthe. 100 % végétal.
-- M5 Déjeuner bordelais : Huîtres du bassin, pavé de bœuf de Bazas sauce bordelaise et cannelés : Bordeaux dans l'assiette, pour deux ou pour dix.
-- M6 Table végétarienne : Velouté de saison, risotto aux cèpes et tarte aux fruits du marché. Simple, généreux, de saison.
-- M7 Cocktail d'entreprise : Pour vos réceptions : saumon gravlax, magret aux cerises en bouchées et pavlova. Service en plateaux et chafing dishes.
-- M8 Buffet de mariage sans gluten : Un buffet généreux et sans gluten pour le plus beau jour : gravlax, pavé de bœuf sauce bordelaise, pavlova aux fruits rouges.
+| N° | Menu | Thème | Régime | Min. pers. | Prix pour le minimum | Prix par personne | Stock | Composition |
+|---|---|---|---|---|---|---|---|---|
+| M1 | Menu de Noël | Noël | Classique | 8 | 272 € | 34 € | 12 | E1, P1, D1 |
+| M2 | Menu de Pâques | Pâques | Végétarien | 4 | 88 € | 22 € | 5 | E6, P3, D2 |
+| M3 | Menu Classique | Classique | Classique | 2 | 56 € | 28 € | 14 | E7, P7, D5 |
+| M4 | Menu Événement | Événement | Classique | 8 | 232 € | 29 € | 5 | E2, P6, D6 |
+| M5 | Menu Végétarien | Classique | Végétarien | 4 | 100 € | 25 € | 8 | E3, P3, D3 |
+| M6 | Menu Végan | Classique | Végan | 6 | 150 € | 25 € | 10 | E5, P4, D4 |
+
+Plats sans menu pour l'instant : P2 (agneau de Pauillac), P5 (lotte à l'armoricaine).
+
+### Descriptions courtes (cartes menu)
+- M1 : Entrée, plat et dessert pour vos repas de fin d'année.
+- M2 à M6 : Entrée, plats et dessert pour vos repas
+
+### Descriptions longues (fiche détail, page non maquettée)
+- M1 Menu de Noël : Le grand classique de Julie et José : foie gras, chapon fermier et bûche maison. Un repas de fête complet, livré prêt à réchauffer.
+- M2 Menu de Pâques : Asperges des Landes sauce mousseline, risotto aux cèpes du Médoc et nid de Pâques chocolaté : un déjeuner de printemps sans viande.
+- M3 Menu Classique : Huîtres du bassin, pavé de bœuf de Bazas sauce bordelaise et cannelés : Bordeaux dans l'assiette, pour deux ou pour dix.
+- M4 Menu Événement : Pour vos réceptions : saumon gravlax, magret aux cerises en bouchées et pavlova. Service en plateaux et chafing dishes.
+- M5 Menu Végétarien : Velouté de saison, risotto aux cèpes et tarte aux fruits du marché. Simple, généreux, de saison.
+- M6 Menu Végan : Fraîcheur et douceur : tartare de légumes croquants, curry au lait de coco et salade de fruits à la menthe. 100 % végétal.
 
 ### Conditions (encadré "Conditions de commande")
-- M1 : À commander au moins 10 jours avant la prestation. Les plats sont livrés froids avec les consignes de réchauffage. Conservation 48 h au réfrigérateur.
-- M2 : À commander au moins 10 jours avant la prestation. Livré froid, à réchauffer (consignes fournies). Conservation 48 h au réfrigérateur.
-- M3 : À commander au moins 7 jours avant la prestation. Disponible de mi-mars à fin avril. Livré chaud sur demande (créneau 11h-13h).
-- M4 : À commander au moins 7 jours avant la prestation. Livré froid, le curry se réchauffe en 10 minutes.
-- M5 : À commander au moins 3 jours avant. Les huîtres sont ouvertes le matin même et doivent être consommées le jour de la livraison.
-- M6 : À commander au moins 3 jours avant. Livré froid, à réchauffer. Conservation 48 h au réfrigérateur.
-- M7 : À commander au moins 15 jours avant. Du matériel est prêté (plateaux, chafing dishes, nappage) : il doit être restitué sous 10 jours ouvrés après la prestation, faute de quoi 600 € de frais sont facturés (voir CGV).
-- M8 : À commander au moins 30 jours avant, acompte de 30 % à la commande. Matériel prêté (restitution sous 10 jours ouvrés, 600 € de frais sinon). Devis personnalisé au-delà de 80 personnes.
+- M1 : Commande à passer 7 jours avant la prestation. Matériel à restituer sous 10 jours. (texte de la maquette Commande)
+- M2 : À commander au moins 7 jours avant la prestation. Disponible de mi-mars à fin avril. Livré chaud sur demande (créneau 11h-13h).
+- M3 : À commander au moins 3 jours avant. Les huîtres sont ouvertes le matin même et doivent être consommées le jour de la livraison.
+- M4 : À commander au moins 15 jours avant. Du matériel est prêté (plateaux, chafing dishes, nappage) : il doit être restitué sous 10 jours ouvrés après la prestation, faute de quoi 600 € de frais sont facturés (voir CGV).
+- M5 : À commander au moins 3 jours avant. Livré froid, à réchauffer. Conservation 48 h au réfrigérateur.
+- M6 : À commander au moins 7 jours avant la prestation. Livré froid, le curry se réchauffe en 10 minutes.
+
+### Règles de prix (maquette Commande)
+- Remise de 10 % à partir de 5 personnes de plus que le minimum du menu (exemple : 13 personnes et plus pour le Menu de Noël).
+- Livraison dans Bordeaux : 5 €.
 
 ## Horaires (pied de page des maquettes)
 Du lundi au dimanche, 9 h - 19 h 
