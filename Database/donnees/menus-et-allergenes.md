@@ -1,8 +1,4 @@
-# Vite & Gourmand : menus, plats et allergènes (données de travail)
-
-Source : ancien projet ECF-Vite-et-Gourmand-Patxi-2026-10-25, fichier vite-gourmand/sql/02_data.sql.
-Statut : propositions à valider. Ces données serviront aux maquettes (mockups), puis au jeu de données SQL.
-Les incohérences relevées à la reprise sont tranchées en bas du fichier.
+# Vite & Gourmand : menus, plats et allergènes
 
 ## Thèmes (liste de l'énoncé)
 Noël, Pâques, Classique, Événement
