@@ -4,9 +4,9 @@
 Noël, Pâques, Classique, Événement
 
 ## Régimes
-Classique, Végétarien, Vegan, Sans gluten (le dernier est un ajout, l'énoncé autorise à enrichir la liste)
+Classique, Végétarien, Vegan, Sans gluten
 
-## Les 14 allergènes à déclaration obligatoire (règlement UE 1169/2011, annexe II)
+## Les 14 allergènes à déclaration obligatoire
 1. Gluten
 2. Crustacés
 3. Œufs
@@ -90,10 +90,4 @@ Classique, Végétarien, Vegan, Sans gluten (le dernier est un ajout, l'énoncé
 - M8 : À commander au moins 30 jours avant, acompte de 30 % à la commande. Matériel prêté (restitution sous 10 jours ouvrés, 600 € de frais sinon). Devis personnalisé au-delà de 80 personnes.
 
 ## Horaires (pied de page des maquettes)
-Lundi : fermé · Mardi à vendredi : 9 h - 19 h · Samedi : 9 h - 18 h · Dimanche : 9 h - 13 h
-
-## Décisions prises le 6 novembre 2026
-1. Gravlax (E2) : blinis supprimés. Le plat ne contient plus de gluten ni d'œufs, le buffet de mariage sans gluten (M8) devient cohérent.
-2. Foie gras (E1) : gluten déclaré (pain d'épices).
-3. Risotto au parmesan (P3) : conservé dans les menus végétariens M2 et M6. Ce sont des menus végétariens, pas vegan.
-4. Magret (P6) : servi en bouchées dans le cocktail d'entreprise (M7), servi en plat avec sa purée dans un repas. Le format suit le type de prestation.
+Du lundi au dimanche, 9 h - 19 h 
