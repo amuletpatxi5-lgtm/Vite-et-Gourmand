@@ -69,13 +69,12 @@ Source de référence : maquettes Figma 02-Menus et 07-Commande (bureau et mobil
 | M5 | Menu Végétarien | Classique | Végétarien | 4 | 100 € | 25 € | 8 | E3, P3, D3 |
 | M6 | Menu Végan | Classique | Végan | 6 | 150 € | 25 € | 10 | E5, P4, D4 |
 
-Plats sans menu pour l'instant : P2 (agneau de Pauillac), P5 (lotte à l'armoricaine).
+Plats sans menu pour l'instant : E4 (œufs mimosa), P2 (agneau de Pauillac), P5 (lotte à l'armoricaine).
 
-### Descriptions courtes (cartes menu)
-- M1 : Entrée, plat et dessert pour vos repas de fin d'année.
-- M2 à M6 : Entrée, plats et dessert pour vos repas
+### Description affichée sur les cartes menu
+L'énoncé ne prévoit qu'une description par menu : la base stocke la description longue ci-dessous. Les cartes de la vue globale en affichent le début, coupé à 2 lignes en CSS, comme sur les maquettes.
 
-### Descriptions longues (fiche détail, page non maquettée)
+### Descriptions (fiche détail en entier, début sur les cartes)
 - M1 Menu de Noël : Le grand classique de Julie et José : foie gras, chapon fermier et bûche maison. Un repas de fête complet, livré prêt à réchauffer.
 - M2 Menu de Pâques : Asperges des Landes sauce mousseline, risotto aux cèpes du Médoc et nid de Pâques chocolaté : un déjeuner de printemps sans viande.
 - M3 Menu Classique : Huîtres du bassin, pavé de bœuf de Bazas sauce bordelaise et cannelés : Bordeaux dans l'assiette, pour deux ou pour dix.
@@ -93,7 +92,8 @@ Plats sans menu pour l'instant : P2 (agneau de Pauillac), P5 (lotte à l'armoric
 
 ### Règles de prix (maquette Commande)
 - Remise de 10 % à partir de 5 personnes de plus que le minimum du menu (exemple : 13 personnes et plus pour le Menu de Noël).
-- Livraison dans Bordeaux : 5 €.
+- Livraison dans Bordeaux : gratuite.
+- Livraison hors de Bordeaux : 5 € majorés de 0,59 € par kilomètre parcouru (énoncé). Exemple de la maquette Commande : Mérignac, 10 km, soit 5 + 5,90 = 10,90 €.
 
 ## Horaires (pied de page des maquettes)
 Du lundi au dimanche, 9 h - 19 h 
