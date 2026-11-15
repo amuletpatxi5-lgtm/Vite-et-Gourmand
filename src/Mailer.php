@@ -28,6 +28,7 @@ final class Mailer
             $mail->isSMTP();
             $mail->Host = (string) getenv('MAIL_HOST');
             $mail->Port = (int) getenv('MAIL_PORT');
+            $mail->Timeout = 10; // 10 s maximum si le serveur SMTP ne répond pas
             $mail->CharSet = PHPMailer::CHARSET_UTF8;
 
             // Chiffrement : vide en local (Mailpit), « tls » en production (Brevo)

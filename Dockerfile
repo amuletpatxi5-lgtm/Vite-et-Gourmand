@@ -1,11 +1,16 @@
 # Image avec le serveur intégré Apache et PHP 8.3
 FROM php:8.3-apache
 
-# Extension PDO pour PostgreSQL, unzip pour décompresser les fichiers Composer
+# Extension PDO pour PostgreSQL, unzip pour décompresser les fichiers Composer, OpenSSL MongoDB
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && apt-get install -y --no-install-recommends libpq-dev unzip libssl-dev pkg-config \
     && docker-php-ext-install pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
+
+# Extension PHP MongoDB
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb \
+    && rm -rf /tmp/pear
 
 # Le reste du code n'est pas accessible le site est servi depuis le dossier public
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/Public
