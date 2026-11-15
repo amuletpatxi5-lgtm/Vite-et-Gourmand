@@ -8,7 +8,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Extension PHP MongoDB
-RUN pecl install mongodb\ 
+RUN pecl install mongodb \
     && docker-php-ext-enable mongodb \
     && rm -rf /tmp/pear
 
