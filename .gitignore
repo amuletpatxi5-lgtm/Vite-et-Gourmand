@@ -26,3 +26,7 @@
 
 # Sauvegardes automatiques de Looping
 *.lo1
+
+# Environnement local : dépendances et secrets
+.env
+/vendor/

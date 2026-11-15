@@ -1,0 +1,11 @@
+# Construction image: fichiers à ne pas envoyer à Docker
+.env
+
+# Historique Git et dépendances
+.git
+vendor/
+
+# Doc et modélisation
+Docs/
+**/*.loo
+**/*.lo1
