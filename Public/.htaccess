@@ -1,0 +1,6 @@
+# Toutes les URL passent par index.php
+# excepter les fichiers et dossiers qui existent : CSS, polices, images, sante.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
