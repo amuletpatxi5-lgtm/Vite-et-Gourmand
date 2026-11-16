@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($titre ?? 'Accueil') ?> | Vite &amp; Gourmand</title>
     <link rel="stylesheet" href="/css/style.css">
+    <?php foreach ($scripts ?? [] as $script): ?>
+        <script src="<?= e($script) ?>" defer></script>
+    <?php endforeach; ?>
 </head>
 <body>
     <a class="evitement" href="#contenu">Aller au contenu</a>

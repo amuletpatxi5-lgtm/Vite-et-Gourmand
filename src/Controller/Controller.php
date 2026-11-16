@@ -10,7 +10,7 @@ class Controller
 {
     protected function render(string $vue, array $donnees = []): void
     {
-        $horaires = Horaire::tous();   // pied de page, présent sur toutes les pages
+        $horaires = Horaire::tous();
         extract($donnees, EXTR_SKIP);
 
         ob_start();
@@ -24,5 +24,11 @@ class Controller
     {
         http_response_code(404);
         $this->render('404', ['titre' => 'Page introuvable']);
+    }
+
+    protected function partiel(string $vue, array $donnees =[]): void
+    {
+        extract($donnees, EXTR_SKIP);
+        require __DIR__ . '/../../templates/' .$vue . '.php';
     }
 }
