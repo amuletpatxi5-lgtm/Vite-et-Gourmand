@@ -25,3 +25,10 @@ RUN echo "date.timezone = Europe/Paris" > /usr/local/etc/php/conf.d/timezone.ini
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+# Dépendances PHP : l'étape reste en cace tant que composer.json et composer.lock ne changent pas
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+# Puis le code (le .dockerignore exlut .env, git, vendor/ et Docs/)
+COPY . .
