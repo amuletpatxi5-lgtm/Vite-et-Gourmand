@@ -21,6 +21,7 @@ $routes = [
     '/' => [AccueilController::class, 'index'],
     '/menus' => [MenuController::class, 'liste'],
     '/menus/filtrer' => [MenuController::class, 'filtrer'],
+    '/menu' => [MenuController::class, 'detail'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
