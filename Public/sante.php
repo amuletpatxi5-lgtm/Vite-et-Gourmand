@@ -1,8 +1,17 @@
 <?php
 // Contrôle pour vérifier que PHP se connecte à PostgreSQL et à MongoDB.
-// Ouvrir sur http://localhost:8080/sante.php pour tester la connexion
+// Ouvrir sur http://localhost:8080/sante.php?jeton=... (valeur de SANTE_JETON) pour tester la connexion
 
 declare(strict_types=1);
+
+// La page ne s'affiche qu'avec ?jeton=... égal à SANTE_JETON
+// Si la variable est absente ou jeton faux : 404, la page semble ne pas exister
+$attendu = (string) getenv('SANTE_JETON');
+$recu = (string) ($_GET['jeton'] ?? '');
+if ($attendu === '' || !hash_equals($attendu, $recu)) {
+    http_response_code(404);
+    exit;
+}
 
 require __DIR__ . '/../vendor/autoload.php';
 
