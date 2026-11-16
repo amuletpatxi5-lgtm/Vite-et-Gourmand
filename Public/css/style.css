@@ -1,0 +1,103 @@
+/* Vite & Gourmand : feuille de style commune (charte graphique v1.1) */
+
+/* Polices hébergées sur le site : pas d'appel à Google (vie privée) */
+@font-face { font-family: 'Amatic SC'; src: url('/fonts/amatic-sc-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Caveat'; src: url('/fonts/caveat-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Nunito'; src: url('/fonts/nunito-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Nunito'; src: url('/fonts/nunito-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+    --bordeaux: #6D1A2A;
+    --bordeaux-fonce: #4E1220;
+    --kaki: #556B2F;
+    --erreur: #A4161A;
+    --creme: #FFF8EE;
+    --sable: #F5E8D6;
+    --texte: #2B2B2B;
+    --texte-secondaire: #5A4A44;
+    --ardoise: #2A2A28;
+    --craie: #F4EFE4;
+    --jaune-craie: #E9C46A;
+    --contour-champ: #7A6A60;
+    --largeur: 72rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--creme);
+    color: var(--texte);
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Titres en Amatic SC, accroches en Caveat (tailles mobiles, bureau plus bas) */
+h1, h2, h3 { font-family: 'Amatic SC', cursive; font-weight: 700; color: var(--bordeaux); }
+h1 { font-size: 3rem; line-height: 1; }
+h2 { font-size: 2.25rem; line-height: 1.05; }
+h3 { font-size: 2rem; line-height: 1; }
+.accroche { font-family: 'Caveat', cursive; font-weight: 700; font-size: 1.75rem; line-height: 1.15; color: var(--kaki); }
+
+a { color: var(--bordeaux); }
+img { max-width: 100%; height: auto; }
+
+/* Focus clavier visible, distinct du survol (RGAA 10.7) */
+:focus-visible { outline: 3px solid var(--texte); outline-offset: 3px; }
+
+/* Lien d'évitement : caché jusqu'au focus clavier (RGAA 12.7) */
+.evitement { position: absolute; left: 1rem; top: -4rem; z-index: 10; padding: .5rem 1rem; background: var(--creme); }
+.evitement:focus { top: 1rem; }
+
+/* En-tête */
+.entete {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1rem max(1rem, calc((100% - var(--largeur)) / 2));
+    background: var(--bordeaux); color: #fff;
+}
+.logo { font-family: 'Amatic SC', cursive; font-weight: 700; font-size: 2.25rem; color: #fff; text-decoration: none; }
+.entete ul { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+.entete nav a { display: inline-block; padding: .625rem 0; color: #fff; font-weight: 700; text-decoration: none; }
+.entete nav a:hover, .entete nav a[aria-current="page"] { text-decoration: underline; }
+.entete :focus-visible, .pied :focus-visible { outline-color: #fff; }
+
+main { max-width: var(--largeur); margin: 0 auto; padding: 2rem 1rem; }
+
+/* Boutons : 44 px de haut minimum (cible tactile) */
+.bouton {
+    display: inline-block; min-height: 2.75rem; padding: .625rem 1.5rem;
+    border: 0; border-radius: 999px; background: var(--bordeaux); color: #fff;
+    font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
+}
+.bouton:hover { background: var(--bordeaux-fonce); }
+
+/* Accueil */
+.hero { display: grid; gap: 2rem; align-items: center; }
+.hero img { border-radius: 20px; }
+
+/* Pied de page */
+.pied {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;
+    padding: 2rem max(1rem, calc((100% - var(--largeur)) / 2));
+    background: var(--bordeaux); color: #fff;
+}
+.pied h2 { margin: 0 0 .5rem; color: #fff; }
+.pied ul { margin: 0; padding: 0; list-style: none; }
+.pied a { color: #fff; }
+.pied nav { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; }
+
+/* Bureau : tailles de la charte, mise en page en colonnes */
+@media (min-width: 48rem) {
+    body { font-size: 1.0625rem; }
+    h1 { font-size: 4.5rem; }
+    h2 { font-size: 3rem; }
+    h3 { font-size: 2.5rem; }
+    .accroche { font-size: 2rem; }
+    .hero { grid-template-columns: 1fr 1fr; }
+}
+
+/* Animations coupées si le système le demande (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

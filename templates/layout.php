@@ -1,0 +1,49 @@
+<?php $actuel = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= e($titre ?? 'Accueil') ?> | Vite &amp; Gourmand</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="evitement" href="#contenu">Aller au contenu</a>
+
+    <header class="entete">
+        <a class="logo" href="/">Vite &amp; Gourmand</a>
+        <nav aria-label="Menu principal">
+            <ul>
+                <li><a href="/" <?= $actuel === '/' ? 'aria-current="page"' : '' ?>>Accueil</a></li>
+                <li><a href="/menus" <?= $actuel === '/menus' ? 'aria-current="page"' : '' ?>>Nos menus</a></li>
+                <li><a href="/connexion" <?= $actuel === '/connexion' ? 'aria-current="page"' : '' ?>>Connexion</a></li>
+                <li><a href="/contact" <?= $actuel === '/contact' ? 'aria-current="page"' : '' ?>>Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="contenu" tabindex="-1">
+        <?= $contenu ?>
+    </main>
+
+    <footer class="pied">
+        <section>
+            <h2>Horaires</h2>
+            <ul>
+                <?php foreach ($horaires as $h): ?>
+                    <li>
+                        <?= e(ucfirst($h['jour'])) ?> :
+                        <?= $h['heure_ouverture'] === null
+                            ? 'fermé'
+                            : e(substr($h['heure_ouverture'], 0, 5)) . ' – ' . e(substr($h['heure_fermeture'], 0, 5)) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <nav aria-label="Informations légales">
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/cgv">Conditions générales de vente</a>
+        </nav>
+    </footer>
+</body>
+</html>
