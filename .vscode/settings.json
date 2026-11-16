@@ -1,0 +1,5 @@
+{
+    // Extensions PHP connues de l'éditeur : les standard (*) + mongodb,
+    // compilée dans l'image Docker mais absente du PHP de Windows
+    "php.stubs": ["*", "mongodb"]
+}
