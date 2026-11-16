@@ -27,6 +27,24 @@ final class MenuController extends Controller
         $this->partiel('menus/_cartes', ['menus' => Menu::filtrer($this->filtres())]);
     }
 
+    public function detail(): void
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $menu = $id ? Menu::trouver($id) : null;
+
+        if ($menu === null) {
+            $this->introuvable();
+            return;
+        }
+
+        $this->render('menus/detail', [
+            'titre' => $menu['titre'],
+            'menu' => $menu,
+            'plats' => Menu::plats($id),
+            'images' => Menu::images($id),
+        ]);
+    }
+
     private function filtres(): array
     {
         $prix = ['options' => ['min_range' => 0]];

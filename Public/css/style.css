@@ -118,6 +118,20 @@ input, select {
 .prix { font-size: 1.25rem; font-weight: 700; color: var(--bordeaux); }
 .prix span { font-size: 1rem; font-weight: 400; color: var(--texte-secondaire); }
 
+/* Détail d'un menu : conditions mises en avant, encadré de commande */
+.galerie {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: 1rem; margin: 1.5rem 0;
+}
+.galerie img { border-radius: 20px; }
+.conditions, .commande { margin: 2rem 0; padding: 1.5rem; border-radius: 20px; }
+.conditions { background: var(--sable); }
+.commande { background: #fff; border: 2px solid var(--bordeaux); }
+.conditions h2, .commande h2 { margin-top: 0; }
+.plats { padding-left: 1.25rem; }
+.plats li { margin-bottom: .75rem; }
+.allergenes { display: block; color: var(--texte-secondaire); font-size: .9375rem; }
+
 /* Bureau : tailles de la charte, mise en page en colonnes */
 @media (min-width: 48rem) {
     body { font-size: 1.0625rem; }

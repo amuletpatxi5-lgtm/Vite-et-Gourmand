@@ -57,4 +57,54 @@ final class Menu
     {
         return Database::connexion()->query('SELECT regime_id, libelle FROM regime ORDER BY libelle')->fetchAll();
     }
+
+    public static function trouver(int $id): ?array
+    {
+        $requete = Database::connexion()->prepare(
+            'SELECT m.menu_id, m.titre, m.description, m.nombre_de_personne_minimum,
+                    m.prix_par_personne, m.conditions, m.quantite_restante,
+                    t.libelle AS theme, r.libelle AS regime
+             FROM menu m
+             JOIN theme t ON t.theme_id = m.theme_id
+             JOIN regime r ON r.regime_id = m.regime_id
+             WHERE m.menu_id = :id AND m.actif'
+        );
+        $requete->execute(['id' => $id]);
+
+        return $requete->fetch() ?: null;
+    }
+
+    // Plats du menu et leurs allergènes, rangés par type : ['entree' => [...], 'plat' => [...], 'dessert' => [...]]
+    public static function plats(int $id): array
+    {
+        $requete = Database::connexion()->prepare(
+            "SELECT p.titre_plat, p.type_plat,
+                    string_agg(a.libelle, ', ' ORDER BY a.libelle) AS allergenes
+             FROM compose c
+             JOIN plat p ON p.plat_id = c.plat_id
+             LEFT JOIN contient ct ON ct.plat_id = p.plat_id
+             LEFT JOIN allergene a ON a.allergene_id = ct.allergene_id
+             WHERE c.menu_id = :id
+             GROUP BY p.plat_id, p.titre_plat, p.type_plat
+             ORDER BY p.titre_plat"
+        );
+        $requete->execute(['id' => $id]);
+
+        $plats = ['entree' => [], 'plat' => [], 'dessert' => []];
+        foreach ($requete->fetchAll() as $plat) {
+            $plats[$plat['type_plat']][] = $plat;
+        }
+
+        return $plats;
+    }
+
+    public static function images(int $id): array
+    {
+        $requete = Database::connexion()->prepare(
+            'SELECT chemin, texte_alternatif FROM image WHERE menu_id = :id ORDER BY ordre'
+        );
+        $requete->execute(['id' => $id]);
+
+        return $requete->fetchAll();
+    }
 }

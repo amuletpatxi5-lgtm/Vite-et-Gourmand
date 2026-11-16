@@ -12,3 +12,11 @@ function prix(string|float $montant): string
 {
     return number_format((float) $montant, 2, ',', "\u{00A0}") . "\u{00A0}€";
 }
+
+function extrait(string $texte, int $longueur = 140): string
+{
+    if (mb_strlen($texte) <= $longueur) {
+        return $texte;
+    }
+    return rtrim(mb_substr($texte, 0, $longueur)) . '…';
+}
