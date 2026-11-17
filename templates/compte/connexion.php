@@ -23,4 +23,6 @@
     <button class="bouton" type="submit">Se connecter</button>
 </form>
 
+<p><a href="/mot-de-passe-oublie">Mot de passe oublié?</a></p>
+
 <p>Pas encore de compte ? <a href="/inscription">Créer un compte</a></p>
