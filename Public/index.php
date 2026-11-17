@@ -7,6 +7,7 @@ require __DIR__ . '/../src/fonctions.php';
 use App\Controller\AccueilController;
 use App\Controller\Controller;
 use App\Controller\MenuController;
+use App\Controller\CompteController;
 
 ini_set('display_errors', getenv('APP_ENV') === 'dev' ? '1' : 0);
 
@@ -22,6 +23,7 @@ $routes = [
     '/menus' => [MenuController::class, 'liste'],
     '/menus/filtrer' => [MenuController::class, 'filtrer'],
     '/menu' => [MenuController::class, 'detail'],
+    '/inscription' => [CompteController::class, 'inscription'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';

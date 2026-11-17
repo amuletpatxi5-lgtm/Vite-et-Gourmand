@@ -132,6 +132,16 @@ input, select {
 .plats li { margin-bottom: .75rem; }
 .allergenes { display: block; color: var(--texte-secondaire); font-size: .9375rem; }
 
+/* Formulaires de compte : erreurs reliées aux champs, messages */
+.formulaire { max-width: 36rem; }
+.champ { margin-bottom: 1.25rem; }
+.aide { margin: 0 0 .25rem; color: var(--texte-secondaire); font-size: .9375rem; }
+.erreur { margin: .25rem 0 0; color: var(--erreur); font-weight: 700; }
+input[aria-invalid="true"] { border-color: var(--erreur); }
+.alerte { margin-bottom: 1.5rem; padding: 1rem 1.5rem; border: 2px solid var(--erreur); border-radius: 20px; background: #fff; }
+.alerte p { margin-top: 0; font-weight: 700; color: var(--erreur); }
+.flash { padding: 1rem 1.5rem; border-radius: 20px; background: var(--kaki); color: #fff; font-weight: 700; }
+
 /* Bureau : tailles de la charte, mise en page en colonnes */
 @media (min-width: 48rem) {
     body { font-size: 1.0625rem; }
