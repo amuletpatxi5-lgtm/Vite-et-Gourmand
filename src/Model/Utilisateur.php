@@ -28,6 +28,20 @@ final class Utilisateur
 
         return $requete->fetch() ?: null;
     }
+    
+    // Coordonnées du compte, pour préremplir les formulaires
+    public static function trouver(int $id): ?array
+    {
+        $requete = Database::connexion()->prepare(
+            'SELECT nom, prenom, email, telephone, adresse_postale, code_postal, ville
+             FROM utilisateur
+             WHERE utilisateur_id = :id'
+        );
+        $requete->execute(['id' => $id]);
+
+        return $requete->fetch() ?: null;
+    }
+
 
     // Le rôle du compte client est fixé ici, jamais lu dans le formulaire
     public static function creer(array $donnees): void

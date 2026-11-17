@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Model;
+
+use App\Database;
+use Throwable;
+
+final class Commande
+{
+    // Enregistre la commande, réserve une unité du stock et ouvre le suivi, en une seule transaction.
+    // $c : menu_id, utilisateur_id, date_prestation, heure_livraison, nombre_personne,
+    //      prix_menu, remise, prix_livraison, prix_total (en centimes), distance_km,
+    //      adresse, code_postal, ville
+    // Renvoie le numéro de commande, ou null si le menu n'est plus disponible.
+    public static function creer(array $c): ?string
+    {
+        $pdo = Database::connexion();
+        $pdo->beginTransaction();
+
+        try {
+            // Réserve une unité du stock ; refusé si le menu est épuisé ou retiré entre-temps
+            $requete = $pdo->prepare(
+                'UPDATE menu SET quantite_restante = quantite_restante - 1
+                 WHERE menu_id = :menu_id AND actif AND quantite_restante > 0'
+            );
+            $requete->execute(['menu_id' => $c['menu_id']]);
+
+            if ($requete->rowCount() === 0) {
+                $pdo->rollBack();
+                return null;
+            }
+
+            $numero = $pdo->query(
+                "SELECT 'VG-' || to_char(CURRENT_DATE, 'YYYY') || '-' || lpad(nextval('commande_numero_seq')::text, 4, '0')"
+            )->fetchColumn();
+
+            // Les montants arrivent en centimes et sont stockés en euros (DECIMAL)
+            $pdo->prepare(
+                'INSERT INTO commande (numero_commande, date_prestation, heure_livraison, nombre_personne,
+                    prix_menu, remise, prix_livraison, prix_total, distance_km,
+                    adresse_prestation, code_postal_prestation, ville_prestation, menu_id, utilisateur_id)
+                 VALUES (:numero, :date_prestation, :heure_livraison, :nombre_personne,
+                    :prix_menu / 100.0, :remise / 100.0, :prix_livraison / 100.0, :prix_total / 100.0, :distance_km,
+                    :adresse, :code_postal, :ville, :menu_id, :utilisateur_id)'
+            )->execute(['numero' => $numero] + $c);
+
+            // Première étape du suivi, datée (énoncé : « tous les états suivis de la date et l'heure »)
+            $pdo->prepare("INSERT INTO historique_statut (statut, numero_commande) VALUES ('en_attente', :numero)")
+                ->execute(['numero' => $numero]);
+
+            $pdo->commit();
+            return $numero;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+}
