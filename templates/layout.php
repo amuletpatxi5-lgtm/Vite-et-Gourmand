@@ -26,6 +26,10 @@
     </header>
 
     <main id="contenu" tabindex="-1">
+        <?php $flash = lire_message_flash(); ?>
+        <?php if ($flash !== null): ?>
+            <p class="flash" role="status"><?= e($flash) ?></p>
+        <?php endif; ?>
         <?= $contenu ?>
     </main>
 

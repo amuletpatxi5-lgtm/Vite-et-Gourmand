@@ -20,3 +20,39 @@ function extrait(string $texte, int $longueur = 140): string
     }
     return rtrim(mb_substr($texte, 0, $longueur)) . '…';
 }
+
+// Jeton CSRF : un par session, placé dans chaque formulaire envoyé en POST
+function csrf_jeton(): string
+{
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] =bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf'];
+}
+
+function csrf_valide(): bool
+{
+    return hash_equals(csrf_jeton(), (string) ($_POST['csrf'] ??''));
+}
+
+// Après un POST réussi : le rechargement de la page ne renvoie pas le formulaire
+function rediriger(string $url): never
+{
+    header('Location: ' . $url, true, 303);
+    exit;
+}
+
+// Message affiché une seule fois, sur la page suivante
+function message_flash(string $texte): void
+{
+    $_SESSION['flash'] = $texte;
+}
+
+function lire_message_flash(): ?string
+{
+    $texte = $_SESSION['flash'] ?? null;
+    unset($_SESSION['flash']);
+
+    return $texte;
+}
