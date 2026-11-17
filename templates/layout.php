@@ -1,4 +1,4 @@
-<?php $actuel = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); ?>
+<?php $actuel = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $compte = utilisateur_connecte(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,7 +19,16 @@
             <ul>
                 <li><a href="/" <?= $actuel === '/' ? 'aria-current="page"' : '' ?>>Accueil</a></li>
                 <li><a href="/menus" <?= $actuel === '/menus' ? 'aria-current="page"' : '' ?>>Nos menus</a></li>
-                <li><a href="/connexion" <?= $actuel === '/connexion' ? 'aria-current="page"' : '' ?>>Connexion</a></li>
+                <?php if ($compte === null): ?>
+                    <li><a href="/connexion" <?= $actuel === '/connexion' ? 'aria-current="page"' : '' ?>>Connexion</a></li>
+                <?php else: ?>
+                    <li>
+                        <form method="post" action="/deconnexion">
+                            <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">
+                            <button class="lien-nav" type="submit">Se déconnecter</button>
+                        </form>
+                    </li>
+                <?php endif; ?>    
                 <li><a href="/contact" <?= $actuel === '/contact' ? 'aria-current="page"' : '' ?>>Contact</a></li>
             </ul>
         </nav>

@@ -62,6 +62,13 @@ img { max-width: 100%; height: auto; }
 .entete nav a:hover, .entete nav a[aria-current="page"] { text-decoration: underline; }
 .entete :focus-visible, .pied :focus-visible { outline-color: #fff; }
 
+/* Bouton de déconnexion présenté comme les liens du menu */
+.lien-nav {
+    min-height: 2.75rem; padding: .625rem 0; border: 0; background: none;
+    color: #fff; font: inherit; font-weight: 700; cursor: pointer;
+}
+.lien-nav:hover {text-decoration: underline; }
+
 main { max-width: var(--largeur); margin: 0 auto; padding: 2rem 1rem; }
 
 /* Boutons : 44 px de haut minimum (cible tactile) */

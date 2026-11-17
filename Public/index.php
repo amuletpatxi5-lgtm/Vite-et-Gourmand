@@ -24,6 +24,10 @@ $routes = [
     '/menus/filtrer' => [MenuController::class, 'filtrer'],
     '/menu' => [MenuController::class, 'detail'],
     '/inscription' => [CompteController::class, 'inscription'],
+    '/connexion' => [CompteController::class, 'connexion'],
+    '/deconnexion' => [CompteController::class, 'deconnexion'],
+    '/mot-de-passe-oublie' => [CompteController::class, 'motDePasseOublie'],
+    '/reinitialiser' => [CompteController::class, 'reinitialiser'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
