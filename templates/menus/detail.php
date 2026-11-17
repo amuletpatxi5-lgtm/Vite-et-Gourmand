@@ -39,7 +39,9 @@
     <section class="commande" aria-labelledby="titre-commande">
         <h2 id="titre-commande">Commander</h2>
         <p class="prix"><?= prix($menu['prix_par_personne']) ?> <span>/ personne</span></p>
-        <p>Minimum <?= (int) $menu['nombre_de_personne_minimum'] ?> personnes</p>
+        <p>Minimum <?= (int) $menu['nombre_de_personne_minimum'] ?> personnes,
+           soit <strong><?= prix((float) $menu['prix_par_personne'] * $menu['nombre_de_personne_minimum']) ?></strong> au total</p>
+
         <?php if ($menu['quantite_restante'] > 0): ?>
             <p>Stock restant : <?= (int) $menu['quantite_restante'] ?></p>
             <a class="bouton" href="/commander?menu=<?= (int) $menu['menu_id'] ?>">Commander ce menu</a>

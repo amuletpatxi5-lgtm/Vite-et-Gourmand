@@ -62,6 +62,13 @@ img { max-width: 100%; height: auto; }
 .entete nav a:hover, .entete nav a[aria-current="page"] { text-decoration: underline; }
 .entete :focus-visible, .pied :focus-visible { outline-color: #fff; }
 
+/* Bouton de déconnexion présenté comme les liens du menu */
+.lien-nav {
+    min-height: 2.75rem; padding: .625rem 0; border: 0; background: none;
+    color: #fff; font: inherit; font-weight: 700; cursor: pointer;
+}
+.lien-nav:hover {text-decoration: underline; }
+
 main { max-width: var(--largeur); margin: 0 auto; padding: 2rem 1rem; }
 
 /* Boutons : 44 px de haut minimum (cible tactile) */
@@ -131,6 +138,16 @@ input, select {
 .plats { padding-left: 1.25rem; }
 .plats li { margin-bottom: .75rem; }
 .allergenes { display: block; color: var(--texte-secondaire); font-size: .9375rem; }
+
+/* Formulaires de compte : erreurs reliées aux champs, messages */
+.formulaire { max-width: 36rem; }
+.champ { margin-bottom: 1.25rem; }
+.aide { margin: 0 0 .25rem; color: var(--texte-secondaire); font-size: .9375rem; }
+.erreur { margin: .25rem 0 0; color: var(--erreur); font-weight: 700; }
+input[aria-invalid="true"] { border-color: var(--erreur); }
+.alerte { margin-bottom: 1.5rem; padding: 1rem 1.5rem; border: 2px solid var(--erreur); border-radius: 20px; background: #fff; }
+.alerte p { margin-top: 0; font-weight: 700; color: var(--erreur); }
+.flash { padding: 1rem 1.5rem; border-radius: 20px; background: var(--kaki); color: #fff; font-weight: 700; }
 
 /* Bureau : tailles de la charte, mise en page en colonnes */
 @media (min-width: 48rem) {
