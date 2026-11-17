@@ -8,6 +8,7 @@ use App\Controller\AccueilController;
 use App\Controller\Controller;
 use App\Controller\MenuController;
 use App\Controller\CompteController;
+use App\Controller\CommandeController;
 
 ini_set('display_errors', getenv('APP_ENV') === 'dev' ? '1' : 0);
 
@@ -28,6 +29,7 @@ $routes = [
     '/deconnexion' => [CompteController::class, 'deconnexion'],
     '/mot-de-passe-oublie' => [CompteController::class, 'motDePasseOublie'],
     '/reinitialiser' => [CompteController::class, 'reinitialiser'],
+    '/commander' => [CommandeController::class, 'commander'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
