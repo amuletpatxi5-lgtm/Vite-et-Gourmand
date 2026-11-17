@@ -9,6 +9,9 @@ use App\Model\Utilisateur;
 
 final class CompteController extends Controller
 {
+    // Empreinte d'un mot de passe aléatoire jamais utilisé : sert de leurre quand l'email est inconnu
+    private const EMPREINTE_LEURRE = '$2y$10$wyhym0YwysRgKVTVcfuObOtvDIGcv.F91U6fSwEbaszuf.tv.4BFq';
+
     public function inscription(): void
     {
         $valeurs = [
@@ -45,16 +48,81 @@ final class CompteController extends Controller
             }
         }
 
-        $this->render('compte/inscription', [
+         $this->render('compte/inscription', [
             'titre' => 'Créer un compte',
             'valeurs' => $valeurs,
             'erreurs' => $erreurs,
         ]);
     }
 
+    public function connexion(): void
+    {
+        if (utilisateur_connecte() !== null) {
+            rediriger('/');
+        }
+
+        $email = '';
+        $erreur = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = trim((string) ($_POST['email'] ?? ''));
+            // Refus de la requête par PostgreSQL : octets non UTF-8)
+            $email = mb_check_encoding($email, 'UTF-8') ? mb_strtolower($email) : '';
+            $motDePasse = (string) ($_POST['mot_de_passe'] ?? '');
+
+            if (!csrf_valide()) {
+                $erreur = 'Votre session a expirée. Merci de renvoyer le formulaire.';
+            } else {
+                $compte = Utilisateur::trouverParEmail($email);
+                // Aucun compte n'est révélé
+                $valide = password_verify($motDePasse, $compte['mot_de_passe'] ?? self::EMPREINTE_LEURRE);
+
+                if ($compte === null || !$valide) {
+                    $erreur = 'Adresse email ou mot de passe incorrect.';
+                } elseif (!$compte['actif']) {
+                    $erreur = 'Ce compte est désactivé. Contactez-nous pour en savoir plus.';
+                } else {
+                    // Nouvel identifiant de session : empêche la fixation de session
+                    session_regenerate_id(true);
+                    $_SESSION['utilisateur'] = [
+                        'utilisateur_id' => $compte['utilisateur_id'],
+                        'prenom' => $compte['prenom'],
+                        'role' => $compte['role'],
+                    ];
+                    $retour = $_SESSION['retour'] ?? '/';
+                    unset($_SESSION['retour']);
+                    message_flash('Bonjour ' . $compte['prenom'] . ', vous êtes connecté.');
+                    rediriger($retour);
+                }
+            }
+        }
+
+        $this->render('compte/connexion', [
+            'titre' => 'Connexion',
+            'email' => $email,
+            'erreur' => $erreur,
+        ]);
+    }
+
+    // En POST avec jeton CSRF : un simple lien ou une image piégée ne peut pas déconnecter
+    public function deconnexion(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_valide()) {
+            $_SESSION = [];
+            session_regenerate_id(true);
+            message_flash('Vous êtes déconnecté. À bientôt !');
+        }
+        rediriger('/');
+    }
+
     // Renvoie [champ => message] ; tableau vide si tout est correct
     private function verifier(array $v, string $motDePasse, string $confirmation): array
     {
+        // Octets non UTF-8 : PostgreSQL refuserait l'INSERT (erreur 500)
+        if (!mb_check_encoding($v, 'UTF-8')) {
+            return ['formulaire' => 'Le formulaire contient des caractères non valides.'];
+        }
+
         $erreurs = [];
 
         if (!csrf_valide()) {
