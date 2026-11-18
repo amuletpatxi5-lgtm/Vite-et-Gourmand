@@ -43,7 +43,30 @@
                 </li>
             <?php endforeach; ?>
         </ol>
-
+        <?php if ($c['statut'] === 'terminee'): ?>
+            <h3>Votre avis</h3>
+            <?php if ($c['avis_statut'] !== null): ?>
+                <p>Vous avez donné la note de <?= (int) $c['avis_note'] ?>/5 :
+                   <?= match ($c['avis_statut']) { 'valide' => 'avis publié sur le site', 'refuse' => 'avis non publié', default => 'avis en attente de validation' } ?>.</p>
+            <?php else: ?>
+                <form class="formulaire" method="post" action="/mes-commandes/avis">
+                    <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">
+                    <input type="hidden" name="numero" value="<?= e($c['numero_commande']) ?>">
+                    <fieldset>
+                        <legend>Votre note</legend>
+                        <?php for ($n = 5; $n >= 1; $n--): ?>
+                            <label class="choix"><input type="radio" name="note" value="<?= $n ?>" required> <?= $n ?> sur 5</label>
+                        <?php endfor; ?>
+                    </fieldset>
+                    <div class="champ">
+                        <label for="avis-<?= e($c['numero_commande']) ?>">Votre commentaire</label>
+                        <textarea id="avis-<?= e($c['numero_commande']) ?>" name="description" rows="4" minlength="10" maxlength="1000" required></textarea>
+                    </div>
+                    <button class="bouton" type="submit">Envoyer mon avis</button>
+                </form>
+            <?php endif; ?>
+        <?php endif; ?>
+        
         <?php if ($c['statut'] === 'en_attente'): ?>
             <form method="post" action="/mes-commandes/annuler"
                   data-confirmation="Annuler la commande <?= e($c['numero_commande']) ?> ? Cette action est définitive.">

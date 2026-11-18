@@ -62,9 +62,10 @@ final class Commande
     public static function duClient(int$utilisateurId): array
     {
         $requete = Database::connexion()->prepare(
-            'SELECT c.numero_commande, c.date_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_menu, c.remise, c.prix_livraison, c.prix_total, c.statut, c.adresse_prestation, c.code_postal_prestation, c.ville_prestation, m.titre AS menu_titre
+            'SELECT c.numero_commande, c.date_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_menu, c.remise, c.prix_livraison, c.prix_total, c.statut, c.adresse_prestation, c.code_postal_prestation, c.ville_prestation, m.titre AS menu_titre, a.note AS avis_note, a.statut AS avis_statut
             FROM commande c
             JOIN menu m ON m.menu_id = c.menu_id
+            LEFT JOIN avis a ON a.numero_commande = c.numero_commande
             WHERE c.utilisateur_id = :id
             ORDER BY c.date_commande DESC'
         );

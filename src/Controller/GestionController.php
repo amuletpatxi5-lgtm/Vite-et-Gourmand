@@ -8,6 +8,7 @@ use App\Model\Commande;
 use App\Stats;
 use Throwable;
 use App\Mailer;
+use App\Model\Avis;
 
 // US-10 : espace employé (et administrateur) pour suivre et faire avancer les commandes
 final class GestionController extends Controller
@@ -111,6 +112,32 @@ final class GestionController extends Controller
 
         rediriger('/gestion/commandes' . $this->filtres());
     }
+
+        // US-11 : avis en attente de modération
+    public function avis(): void
+    {
+        $this->exigerRole(...self::ROLES);
+        $this->render('gestion/avis', ['titre' => 'Avis à valider', 'avis' => Avis::enAttente()]);
+    }
+
+    // US-11 : publier ou refuser un avis
+    public function modererAvis(): void
+    {
+        $this->exigerRole(...self::ROLES);
+        $id = filter_input(INPUT_POST, 'avis_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $decision = $this->champ('decision');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valide() || !$id || !in_array($decision, ['valide', 'refuse'], true)) {
+            message_flash('Action impossible : rechargez la page et réessayez.');
+        } elseif (Avis::moderer($id, $decision)) {
+            message_flash($decision === 'valide' ? "Avis publié sur la page d'accueil." : 'Avis refusé : il ne sera pas publié.');
+        } else {
+            message_flash('Cet avis a déjà été traité.');
+        }
+        
+        rediriger('/gestion/avis');
+    }
+
 
     // Numéro de commande d'un formulaire POST protégé ; sinon retour à la liste
     private function numeroPoste(): string

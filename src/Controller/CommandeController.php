@@ -13,6 +13,7 @@ use App\Stats;
 use App\Tarif;
 use DateTimeImmutable;
 use Throwable;
+use App\Model\Avis;
 
 final class CommandeController extends Controller
 {
@@ -96,6 +97,32 @@ final class CommandeController extends Controller
         }
 
         rediriger('/mes-commandes');
+    }
+
+    // US-08 avis sur une commande terminée; publication seulement après validation par un employé
+    public function donnerAvis(): void
+    {
+        exiger_connexion();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valide()) {
+            rediriger('/mes-commandes');
+        }
+
+        $numero = $_POST['numero'] ?? '';
+        $note = filter_input(INPUT_POST, 'note', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5]]);
+        $description = $_POST['description'] ?? '';
+        $description = is_string($description) && mb_check_encoding($description, 'UTF-8') ? trim($description) : '';
+
+        if (!is_string($numero) || !preg_match('/^VG-\d{4}-\d{4,}$/', $numero) || !$note
+            || mb_strlen($description) < 10 || mb_strlen($description) > 1000) {
+            message_flash('Avis non enregistré : choisissez une note et écrivez un commentaire de 10 à 1000 caractères.');
+        } elseif (Avis::creer($numero, utilisateur_connecte()['utilisateur_id'], $note, $description)) {
+            message_flash('Merci pour votre avis ! Il sera publié après validation par notre équipe.');
+        } else {
+            message_flash("Vous ne pouvez pas donner d'avis sur cette commande.");
+        }
+
+        rediriger("/mes-commandes");
     }
 
     // Contrôle la saisie puis calcule la distance et le prix. Renvoie [erreurs, récapitulatif ou null]
