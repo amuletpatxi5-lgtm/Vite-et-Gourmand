@@ -62,9 +62,10 @@ final class Commande
     public static function duClient(int$utilisateurId): array
     {
         $requete = Database::connexion()->prepare(
-            'SELECT c.numero_commande, c.date_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_menu, c.remise, c.prix_livraison, c.prix_total, c.statut, c.adresse_prestation, c.code_postal_prestation, c.ville_prestation, m.titre AS menu_titre
+            'SELECT c.numero_commande, c.date_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_menu, c.remise, c.prix_livraison, c.prix_total, c.statut, c.adresse_prestation, c.code_postal_prestation, c.ville_prestation, m.titre AS menu_titre, a.note AS avis_note, a.statut AS avis_statut
             FROM commande c
             JOIN menu m ON m.menu_id = c.menu_id
+            LEFT JOIN avis a ON a.numero_commande = c.numero_commande
             WHERE c.utilisateur_id = :id
             ORDER BY c.date_commande DESC'
         );
@@ -127,17 +128,18 @@ final class Commande
     }
     }
 
-    // Étape suivante d'une commande (null : terminée ou annulée, plus rien à faire)
-    public static function statutSuivant(string $statut, bool $pretMateriel): ?string
+    // Étapes possibles après un statut ([] : terminée ou annulée, plus rien à faire).
+    // Après la livraison, l'employé indique s'il a prêté du matériel.
+    public static function statutsSuivants(string $statut): array
     {
         return match ($statut) {
-            'en_attente' => 'accepte',
-            'accepte' => 'en_preparation',
-            'en_preparation' => 'en_livraison',
-            'en_livraison' => 'livre',
-            'livre' => $pretMateriel ? 'attente_retour_materiel' : 'terminee',
-            'attente_retour_materiel' => 'terminee',
-            default => null,
+            'en_attente' => ['accepte'],
+            'accepte' => ['en_preparation'],
+            'en_preparation' => ['en_livraison'],
+            'en_livraison' => ['livre'],
+            'livre' => ['terminee', 'attente_retour_materiel'],
+            'attente_retour_materiel' => ['terminee'],
+            default => [],
         };
     }
 
@@ -171,39 +173,46 @@ final class Commande
         return $requete->fetchAll();
     }
 
-    // Fait avancer la commande d'une étape, seulement si elle est encore au statut que l'employé a vu.
-    // Renvoie le nouveau statut, ou null si refusé (déjà avancée par un collègue, double-clic, terminée...).
-    public static function avancer(string $numero, string $statutVu): ?string
+    // Passe la commande du statut que l'employé a vu au statut choisi, si cette étape est autorisée.
+    // Renvoie l'email et le prénom du client (pour le prévenir), ou null si refusé
+    public static function avancer(string $numero, string $statutVu, string $cible): ?array
     {
+        if (!in_array($cible, self::statutsSuivants($statutVu), true)) {
+            return null;
+        }
+
         $pdo = Database::connexion();
         $pdo->beginTransaction();
 
         try {
-            // FOR UPDATE : la ligne est verrouillée jusqu'au commit, un 2e employé attend son tour
+            // « AND c.statut = :vu » : si la commande a changé entre-temps, aucune ligne n'est modifiée
             $requete = $pdo->prepare(
-                'SELECT pret_materiel FROM commande WHERE numero_commande = :numero AND statut = :statut FOR UPDATE'
+                "UPDATE commande c
+                 SET statut = :cible,
+                     pret_materiel = (c.pret_materiel OR :cible::varchar = 'attente_retour_materiel')
+                 FROM utilisateur u
+                 WHERE u.utilisateur_id = c.utilisateur_id AND c.numero_commande = :numero AND c.statut = :vu
+                 RETURNING u.email, u.prenom"
             );
-            $requete->execute(['numero' => $numero, 'statut' => $statutVu]);
-            $commande = $requete->fetch();
-            $suivant = $commande === false ? null : self::statutSuivant($statutVu, $commande['pret_materiel']);
+            $requete->execute(['cible' => $cible, 'numero' => $numero, 'vu' => $statutVu]);
+            $client = $requete->fetch();
 
-            if ($suivant === null) {
+            if ($client === false) {
                 $pdo->rollBack();
                 return null;
             }
 
-            $pdo->prepare('UPDATE commande SET statut = :suivant WHERE numero_commande = :numero')
-                ->execute(['suivant' => $suivant, 'numero' => $numero]);
             $pdo->prepare('INSERT INTO historique_statut (statut, numero_commande) VALUES (:statut, :numero)')
-                ->execute(['statut' => $suivant, 'numero' => $numero]);
+                ->execute(['statut' => $cible, 'numero' => $numero]);
 
             $pdo->commit();
-            return $suivant;
+            return $client;
         } catch (Throwable $e) {
             $pdo->rollBack();
             throw $e;
         }
     }
+
 
     // Annulation par l'employé après avoir contacté le client (énoncé : motif et mode de contact obligatoires).
     // Possible tant que la commande n'est pas partie en livraison ; le stock est rendu.

@@ -79,7 +79,7 @@ final class Stats
                     'nombre_commandes' => ['$sum' => 1],
                     'chiffre_affaires_centimes' => ['$sum' => '$montant_centimes'],
                 ]],
-                ['$sort' => ['nombre_commandes' => -1]],
+                ['$sort' => ['nombre_commandes' => -1, 'chiffre_affaires_centimes' => -1]],
             ],
             // Résultats sous forme de tableaux PHP plutôt qu'en objets BSON
             ['typeMap' => ['root' => 'array', 'document' => 'array', 'array' => 'array']]

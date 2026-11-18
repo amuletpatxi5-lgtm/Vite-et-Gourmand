@@ -48,16 +48,21 @@
             <?php endif; ?>
         </dl>
 
-        <?php if ($c['suivant'] !== null): ?>
-            <form method="post" action="/gestion/commandes/avancer<?= e($filtres) ?>">
-                <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">
-                <input type="hidden" name="numero" value="<?= e($c['numero_commande']) ?>">
-                <input type="hidden" name="statut_vu" value="<?= e($c['statut']) ?>">
-                <button class="bouton" type="submit">
-                    Passer à : <?= e(libelle_statut($c['suivant'])) ?>
-                    <span class="visuellement-cache">(commande <?= e($c['numero_commande']) ?>)</span>
-                </button>
-            </form>
+         <?php if ($c['suivants'] !== []): ?>
+            <div class="actions">
+                <?php foreach ($c['suivants'] as $suivant): ?>
+                    <form method="post" action="/gestion/commandes/avancer<?= e($filtres) ?>">
+                        <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">
+                        <input type="hidden" name="numero" value="<?= e($c['numero_commande']) ?>">
+                        <input type="hidden" name="statut_vu" value="<?= e($c['statut']) ?>">
+                        <input type="hidden" name="statut_cible" value="<?= e($suivant) ?>">
+                        <button class="bouton" type="submit">
+                            Passer à : <?= e(libelle_statut($suivant)) ?>
+                            <span class="visuellement-cache">(commande <?= e($c['numero_commande']) ?>)</span>
+                        </button>
+                    </form>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
 
         <?php if ($c['annulable']): ?>
