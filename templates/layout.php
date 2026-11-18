@@ -22,6 +22,10 @@
                 <?php if ($compte === null): ?>
                     <li><a href="/connexion" <?= $actuel === '/connexion' ? 'aria-current="page"' : '' ?>>Connexion</a></li>
                 <?php else: ?>
+                    <li><a href="/mes-commandes" <?= $actuel === '/mes-commandes' ? 'aria-current="page"' : '' ?>>Mes commandes</a></li>
+                    <?php if (in_array($compte['role'], ['employe', 'administrateur'], true)): ?>
+                    <li><a href="/gestion/commandes" <?= $actuel === '/gestion/commandes' ? 'aria-current="page"' : '' ?>>Gestion</a></li>
+                    <?php endif; ?>
                     <li>
                         <form method="post" action="/deconnexion">
                             <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">

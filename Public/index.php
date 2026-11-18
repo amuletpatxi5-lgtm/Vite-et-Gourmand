@@ -8,6 +8,10 @@ use App\Controller\AccueilController;
 use App\Controller\Controller;
 use App\Controller\MenuController;
 use App\Controller\CompteController;
+use App\Controller\CommandeController;
+use App\Controller\GestionController;
+use App\Controller\ContactController;
+use App\Controller\PageController;
 
 ini_set('display_errors', getenv('APP_ENV') === 'dev' ? '1' : 0);
 
@@ -28,6 +32,15 @@ $routes = [
     '/deconnexion' => [CompteController::class, 'deconnexion'],
     '/mot-de-passe-oublie' => [CompteController::class, 'motDePasseOublie'],
     '/reinitialiser' => [CompteController::class, 'reinitialiser'],
+    '/commander' => [CommandeController::class, 'commander'],
+    '/mes-commandes' => [CommandeController::class, 'mesCommandes'],
+    '/mes-commandes/annuler' => [CommandeController::class, 'annuler'],
+    '/gestion/commandes' => [GestionController::class, 'commandes'],
+    '/gestion/commandes/avancer' => [GestionController::class, 'avancer'],
+    '/gestion/commandes/annuler' => [GestionController::class, 'annuler'],
+    '/contact' => [ContactController::class, 'contact'],
+    '/mentions-legales' => [PageController::class, 'mentionsLegales'],
+    '/cgv' => [PageController::class, 'cgv'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';

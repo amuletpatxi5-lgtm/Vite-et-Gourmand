@@ -163,3 +163,71 @@ input[aria-invalid="true"] { border-color: var(--erreur); }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Commande : groupes de champs et récapitulatif du prix */
+.formulaire fieldset { margin: 0 0 1.5rem; padding: 1rem 1.5rem; border: 1px solid var(--contour-champ); border-radius: 20px; }
+.formulaire legend { padding: 0 .5rem; font-weight: 700; }
+.recap { margin-bottom: 1.5rem; padding: 1rem 1.5rem; border-radius: 20px; background: var(--sable); }
+.recap dl { display: grid; grid-template-columns: 1fr auto; gap: .5rem 1rem; margin: 0; }
+.recap dd { margin: 0; text-align: right; }
+.recap .total { font-weight: 700; font-size: 1.25rem; }
+
+/* Espace client (US-07) */
+.ma-commande { margin-bottom: 2rem; padding: 1.5rem; border: 1px solid var(--contour-champ); border-radius: 20px; background: #fff; }
+.ma-commande h2 { margin-top: 0; }
+.numero { display: block; font-family: 'Nunito', system-ui, sans-serif; font-size: 1rem; color: var(--texte-secondaire); }
+.statut { display: inline-block; padding: .25rem .75rem; border-radius: 999px; background: var(--kaki); color: #fff; font-weight: 700; }
+.statut-en_attente { background: var(--jaune-craie); color: var(--texte); }
+.statut-annulee { background: var(--sable); color: var(--texte-secondaire); }
+.details { display: grid; grid-template-columns: auto 1fr; gap: .25rem 1rem; }
+.details dt { font-weight: 700; }
+.details dd { margin: 0; }
+.details .total { font-weight: 700; color: var(--bordeaux); }
+.suivi { padding-left: 1.25rem; }
+
+/* Espace employé (US-10) */
+.visuellement-cache {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.annulation { margin-top: 1rem; }
+.annulation summary { cursor: pointer; font-weight: 700; color: var(--bordeaux); }
+.annulation fieldset { margin: 1rem 0; padding: 0; border: 0; }
+.annulation legend { margin-bottom: .25rem; font-weight: 700; }
+.choix { display: flex; align-items: center; gap: .5rem; font-weight: 400; }
+.choix input { width: auto; min-height: 0; }
+.annulation textarea {
+    display: block; width: 100%; margin-bottom: 1rem; padding: .5rem .75rem;
+    border: 2px solid var(--contour-champ); border-radius: 12px; background: #fff; font: inherit;
+}
+
+/* Contact (US-14) */
+.formulaire textarea {
+    width: 100%; padding: .5rem .75rem;
+    border: 2px solid var(--contour-champ); border-radius: 12px;
+    background: #fff; color: var(--texte); font: inherit;
+}
+.formulaire textarea[aria-invalid="true"] { border-color: var(--erreur); }
+.pot-de-miel { position: absolute; left: -9999px; }
+
+/* Accueil (US-01) : présentation et avis */
+.presentation { display: grid; gap: 2rem; align-items: center; margin: 3rem 0; }
+.presentation img { border-radius: 20px; }
+.engagements { padding-left: 1.25rem; }
+.engagements li { margin-bottom: .5rem; }
+.avis-liste {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    gap: 1.5rem; margin: 0; padding: 0; list-style: none;
+}
+.avis { height: 100%; margin: 0; padding: 1.5rem; border-radius: 20px; background: #fff; border: 1px solid var(--contour-champ); }
+.avis blockquote { margin: .5rem 0 1rem; font-style: italic; }
+.avis blockquote p { margin: 0; }
+.avis figcaption { color: var(--texte-secondaire); font-weight: 700; }
+.etoiles { margin: 0; font-size: 1.25rem; color: var(--bordeaux); }
+@media (min-width: 48rem) {
+    .presentation { grid-template-columns: 1fr 1fr; }
+}
+
+/* Pages de texte (#45) : lignes pas trop longues pour la lecture */
+.texte-legal { max-width: 48rem; }
+.texte-legal ul { padding-left: 1.25rem; }

@@ -31,4 +31,14 @@ class Controller
         extract($donnees, EXTR_SKIP);
         require __DIR__ . '/../../templates/' .$vue . '.php';
     }
+
+    // Page réservée à certains rôles. Les autres comptes voient « page introuvable » : on ne révèle pas que la page existe.
+    protected function exigerRole(string ...$roles): void
+    {
+        exiger_connexion();
+        if (!in_array(utilisateur_connecte()['role'], $roles, true)) {
+            $this->introuvable();
+            exit;
+        }
+    }
 }
