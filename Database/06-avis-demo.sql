@@ -19,7 +19,7 @@
 INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, actif, role_id)
 SELECT v.nom, v.prenom, v.email, '!', false, (SELECT role_id FROM role WHERE libelle = 'utilisateur')
 FROM (VALUES
-   ('Lacoste', 'Marie', 'demo-marie@vite-gourmand.test'),
+   ('Arnaud', 'Sara', 'demo-sara@vite-gourmand.test'),
    ('Bernard', 'Thomas', 'demo-thomas@vite-gourmand.test'),
    ('Moreau', 'Sophie', 'demo-sophie@vite-gourmand.test'),
    ('Garcia', 'Antoine', 'demo-antoine@vite-gourmand.test')
@@ -34,11 +34,11 @@ SELECT v.numero, v.date_commande, v.date_prestation, '12:00', v.personnes,
    m.prix_par_personne * v.personnes, 0, m.prix_par_personne * v.personnes, 'terminee',
    'Place de la Bourse', '33000', 'Bordeaux', m.menu_id, u.utilisateur_id
 FROM (VALUES
-   ('VG-2025-0101', TIMESTAMP '2025-12-08 10:00', DATE '2025-12-24', 8, 'Menu de Noël', 'demo-marie@vite-gourmand.test'),
+   ('VG-2025-0101', TIMESTAMP '2025-12-08 10:00', DATE '2025-12-24', 8, 'Menu de Noël', 'demo-sara@vite-gourmand.test'),
    ('VG-2025-0102', TIMESTAMP '2025-04-02 15:30', DATE '2025-04-20', 5, 'Menu de Pâques', 'demo-thomas@vite-gourmand.test'),
    ('VG-2025-0103', TIMESTAMP '2025-06-10 09:15', DATE '2025-06-21', 10, 'Menu Événement', 'demo-sophie@vite-gourmand.test'),
    ('VG-2025-0104', TIMESTAMP '2025-09-01 18:45', DATE '2025-09-06', 6, 'Menu Classique', 'demo-antoine@vite-gourmand.test'),
-   ('VG-2025-0105', TIMESTAMP '2025-10-03 11:00', DATE '2025-10-11', 6, 'Menu Végétarien', 'demo-marie@vite-gourmand.test'),
+   ('VG-2025-0105', TIMESTAMP '2025-10-03 11:00', DATE '2025-10-11', 6, 'Menu Végétarien', 'demo-sara@vite-gourmand.test'),
    ('VG-2025-0106', TIMESTAMP '2025-11-02 14:00', DATE '2025-11-15', 8, 'Menu Végan', 'demo-thomas@vite-gourmand.test')
 ) AS v(numero, date_commande, date_prestation, personnes, menu, email)
 JOIN menu m ON m.titre = v.menu
