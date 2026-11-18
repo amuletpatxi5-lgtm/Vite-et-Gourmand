@@ -30,6 +30,8 @@ $routes = [
     '/mot-de-passe-oublie' => [CompteController::class, 'motDePasseOublie'],
     '/reinitialiser' => [CompteController::class, 'reinitialiser'],
     '/commander' => [CommandeController::class, 'commander'],
+    '/mes-commandes' => [CommandeController::class, 'mesCommandes'],
+    '/mes-commandes/annuler' => [CommandeController::class, 'annuler'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
