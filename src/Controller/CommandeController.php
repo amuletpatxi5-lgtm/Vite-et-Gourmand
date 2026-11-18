@@ -59,6 +59,45 @@ final class CommandeController extends Controller
         ]);
     }
 
+    // US-07 espace client, commandes et suivi daté
+    public function mesCommandes(): void
+    {
+        exiger_connexion();
+        $id = utilisateur_connecte()['utilisateur_id'];
+
+        $this->render('commande/mes-commandes', [
+            'titre' => 'Mes commandes',
+            'commandes'=> Commande::duClient($id),
+            'suivis' => Commande::suivis($id),
+            'scripts' => ['/js/confirmation.js'],
+        ]);
+    }
+
+    // Annulation par le client : POST + CSRF
+    public function annuler(): void
+    {
+        exiger_connexion();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valide()) {
+            rediriger('/mes-commandes');
+        }
+
+        $numero = $_POST['numero'] ?? '';
+        if (is_string($numero) && preg_match('/^VG-\d{4}-\d{4,}$/', $numero)
+            && Commande::annuler($numero, utilisateur_connecte()['utilisateur_id'])) {
+            try {
+                Stats::retirerCommande($numero);
+            } catch (Throwable $e) {
+                error_log('Stats : ' . $e->getMessage());
+            }
+            message_flash("Votre commande $numero est annulée.");
+        } else {
+            message_flash("Cette commande ne peut plus être annulée.");
+        }
+
+        rediriger('/mes-commandes');
+    }
+
     // Contrôle la saisie puis calcule la distance et le prix. Renvoie [erreurs, récapitulatif ou null]
     private function verifier(array $v): array
     {
@@ -169,6 +208,6 @@ final class CommandeController extends Controller
         );
 
         message_flash("Merci ! Votre commande $numero est enregistrée. Un mail de confirmation vous a été envoyé.");
-        rediriger('/');
+        rediriger('/mes-commandes');
     }
 }

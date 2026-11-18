@@ -72,3 +72,18 @@ function exiger_connexion(): void
         rediriger('/connexion');
     }
 }
+
+function libelle_statut(string $statut): string
+{
+    return match ($statut) {
+        'en_attente' => 'En attente de validation',
+        'accepte' => 'Acceptée',
+        'en_preparation' => 'En préparation',
+        'en_livraison' => 'En cours de livraison',
+        'livre' => 'Livrée',
+        'attente_retour_materiel' => 'En attente du retour du matériel',
+        'terminee' => 'Terminée',
+        'annulee' => 'Annulée',
+        default => $statut,
+    };
+}

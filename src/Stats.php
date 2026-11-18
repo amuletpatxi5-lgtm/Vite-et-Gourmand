@@ -44,6 +44,12 @@ final class Stats
         ]);
     }
 
+    // Commande annulée ne compte plus dans les statistiques
+    public static function retirerCommande(string $numeroCommande): void
+    {
+        self::collection()->deleteOne(['numero_commande' => $numeroCommande]);
+    }
+
     // Nombre de commandes et chiffre d'affaires par menu.
     // Filtres facultatifs : un menu, une période (du et au inclus).
     public static function parMenu(

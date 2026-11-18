@@ -57,4 +57,74 @@ final class Commande
             throw $e;
         }
     }
+        
+    // Commandes d'un client, les plus récents en premier
+    public static function duClient(int$utilisateurId): array
+    {
+        $requete = Database::connexion()->prepare(
+            'SELECT c.numero_commande, c.date_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_menu, c.remise, c.prix_livraison, c.prix_total, c.statut, c.adresse_prestation, c.code_postal_prestation, c.ville_prestation, m.titre AS menu_titre
+            FROM commande c
+            JOIN menu m ON m.menu_id = c.menu_id
+            WHERE c.utilisateur_id = :id
+            ORDER BY c.date_commande DESC'
+        );
+        $requete->execute(['id'=> $utilisateurId]);
+
+        return $requete->fetchAll();
+    } 
+
+    // Suivi de toutes les commandes d'un client
+    public static function suivis(int $utilisatuerId): array
+    {
+        $requete= Database::connexion()->prepare(
+            'SELECT h.numero_commande, h.statut, h.date_changement
+            FROM historique_statut h
+            JOIN commande c ON c.numero_commande = h.numero_commande
+            WHERE c.utilisateur_id = :id
+            ORDER BY h.date_changement, h.historique_id'
+        );
+        $requete->execute(['id'=> $utilisatuerId]);
+
+        $suivis =[];
+        foreach ($requete->fetchAll() as $etape) {
+            $suivis[$etape['numero_commande']][] = $etape;
+        }
+
+        return $suivis;
+    }
+
+    // Annulation par le client : sa commande tant que le statut est en attente.
+    // Mise à jour du stock et annulation entre dans le suivi. 
+    public static function annuler(string $numero, int $utilisateurId): bool
+    {
+    $pdo = Database::connexion();
+    $pdo->beginTransaction();
+
+    try {
+        $requete =$pdo->prepare(
+            "UPDATE commande SET statut = 'annulee',motif_annulation = 'Annulée par le client'
+            WHERE numero_commande = :numero AND utilisateur_id = :id AND statut = 'en_attente'
+            RETURNING menu_id"
+        );
+        $requete->execute(['numero' => $numero, 'id' => $utilisateurId]);
+        $menuId = $requete->fetchColumn();
+        
+        if ($menuId === false) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $pdo->prepare('UPDATE menu SET quantite_restante = quantite_restante + 1 WHERE menu_id = :id')
+            ->execute(['id' => $menuId]);
+        $pdo->prepare("INSERT INTO historique_statut (statut, numero_commande) VALUES ('annulee', :numero)")
+            ->execute(['numero' => $numero]);
+            
+        $pdo->commit();
+        return true;
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
 }
