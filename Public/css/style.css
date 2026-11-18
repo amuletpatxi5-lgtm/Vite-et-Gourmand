@@ -227,3 +227,7 @@ input[aria-invalid="true"] { border-color: var(--erreur); }
 @media (min-width: 48rem) {
     .presentation { grid-template-columns: 1fr 1fr; }
 }
+
+/* Pages de texte (#45) : lignes pas trop longues pour la lecture */
+.texte-legal { max-width: 48rem; }
+.texte-legal ul { padding-left: 1.25rem; }
