@@ -200,3 +200,12 @@ input[aria-invalid="true"] { border-color: var(--erreur); }
     display: block; width: 100%; margin-bottom: 1rem; padding: .5rem .75rem;
     border: 2px solid var(--contour-champ); border-radius: 12px; background: #fff; font: inherit;
 }
+
+/* Contact (US-14) */
+.formulaire textarea {
+    width: 100%; padding: .5rem .75rem;
+    border: 2px solid var(--contour-champ); border-radius: 12px;
+    background: #fff; color: var(--texte); font: inherit;
+}
+.formulaire textarea[aria-invalid="true"] { border-color: var(--erreur); }
+.pot-de-miel { position: absolute; left: -9999px; }
