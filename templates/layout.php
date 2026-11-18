@@ -26,6 +26,10 @@
                     <?php if (in_array($compte['role'], ['employe', 'administrateur'], true)): ?>
                     <li><a href="/gestion/commandes" <?= $actuel === '/gestion/commandes' ? 'aria-current="page"' : '' ?>>Gestion</a></li>
                     <?php endif; ?>
+                    <?php if ($compte['role'] === 'administrateur'): ?>
+                    <li><a href="/admin/statistiques" <?= $actuel === '/admin/statistiques' ? 'aria-current="page"' : '' ?>>Statistiques</a></li>
+                    <?php endif; ?>
+
                     <li>
                         <form method="post" action="/deconnexion">
                             <input type="hidden" name="csrf" value="<?= e(csrf_jeton()) ?>">
