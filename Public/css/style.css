@@ -209,3 +209,21 @@ input[aria-invalid="true"] { border-color: var(--erreur); }
 }
 .formulaire textarea[aria-invalid="true"] { border-color: var(--erreur); }
 .pot-de-miel { position: absolute; left: -9999px; }
+
+/* Accueil (US-01) : présentation et avis */
+.presentation { display: grid; gap: 2rem; align-items: center; margin: 3rem 0; }
+.presentation img { border-radius: 20px; }
+.engagements { padding-left: 1.25rem; }
+.engagements li { margin-bottom: .5rem; }
+.avis-liste {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    gap: 1.5rem; margin: 0; padding: 0; list-style: none;
+}
+.avis { height: 100%; margin: 0; padding: 1.5rem; border-radius: 20px; background: #fff; border: 1px solid var(--contour-champ); }
+.avis blockquote { margin: .5rem 0 1rem; font-style: italic; }
+.avis blockquote p { margin: 0; }
+.avis figcaption { color: var(--texte-secondaire); font-weight: 700; }
+.etoiles { margin: 0; font-size: 1.25rem; color: var(--bordeaux); }
+@media (min-width: 48rem) {
+    .presentation { grid-template-columns: 1fr 1fr; }
+}
