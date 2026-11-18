@@ -12,6 +12,7 @@ use App\Controller\CommandeController;
 use App\Controller\GestionController;
 use App\Controller\ContactController;
 use App\Controller\PageController;
+use App\Controller\AdminController;
 
 ini_set('display_errors', getenv('APP_ENV') === 'dev' ? '1' : 0);
 
@@ -41,6 +42,7 @@ $routes = [
     '/contact' => [ContactController::class, 'contact'],
     '/mentions-legales' => [PageController::class, 'mentionsLegales'],
     '/cgv' => [PageController::class, 'cgv'],
+    '/admin/statistiques' => [AdminController::class, 'statistiques'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';

@@ -231,3 +231,12 @@ input[aria-invalid="true"] { border-color: var(--erreur); }
 /* Pages de texte (#45) : lignes pas trop longues pour la lecture */
 .texte-legal { max-width: 48rem; }
 .texte-legal ul { padding-left: 1.25rem; }
+
+/* Statistiques (US-13) : tableau avec barres proportionnelles */
+.stats { width: 100%; border-collapse: collapse; background: #fff; }
+.stats caption { margin-bottom: .75rem; text-align: left; font-weight: 700; }
+.stats th, .stats td { padding: .75rem 1rem; border-bottom: 1px solid var(--sable); text-align: left; vertical-align: middle; }
+.stats td { width: 35%; }
+.stats tfoot th, .stats tfoot td { border-bottom: 0; font-weight: 700; }
+.barre { display: block; height: .75rem; margin-bottom: .25rem; border-radius: 999px; background: var(--kaki); }
+.barre-ca { background: var(--bordeaux); }
