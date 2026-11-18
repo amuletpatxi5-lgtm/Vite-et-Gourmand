@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Model\Commande;
 use App\Stats;
 use Throwable;
+use App\Mailer;
 
 // US-10 : espace employé (et administrateur) pour suivre et faire avancer les commandes
 final class GestionController extends Controller
@@ -28,7 +29,7 @@ final class GestionController extends Controller
         // Pour chaque commande : l'étape suivante possible et si l'employé peut encore l'annuler
         $commandes = array_map(
             fn(array $c) => $c + [
-                'suivant' => Commande::statutSuivant($c['statut'], $c['pret_materiel']),
+                'suivants' => Commande::statutsSuivants($c['statut']),
                 'annulable' => in_array($c['statut'], self::ANNULABLES, true),
             ],
             Commande::toutes($statut, $client === '' ? null : $client)
@@ -45,19 +46,47 @@ final class GestionController extends Controller
         ]);
     }
 
-    // Fait avancer une commande d'une étape
+    // Fait avancer une commande d'une étape et prévient le client quand l'énoncé l'exige
     public function avancer(): void
     {
         $this->exigerRole(...self::ROLES);
         $numero = $this->numeroPoste();
+        $cible = $this->champ('statut_cible');
 
-        $suivant = Commande::avancer($numero, $this->champ('statut_vu'));
-        message_flash($suivant === null
-            ? "La commande $numero a été modifiée entre-temps : vérifiez son statut."
-            : "Commande $numero : " . libelle_statut($suivant) . '.');
+        $client = Commande::avancer($numero, $this->champ('statut_vu'), $cible);
+        if ($client === null) {
+            message_flash("La commande $numero a été modifiée entre-temps : vérifiez son statut.");
+        } else {
+            $this->prevenirClient($numero, $cible, $client);
+            message_flash("Commande $numero : " . libelle_statut($cible) . '.');
+        }
 
         rediriger('/gestion/commandes' . $this->filtres());
     }
+
+    // Mails exigés par l'énoncé : commande terminée (invitation à donner son avis)
+    // et attente du retour de matériel (frais de 600 € après 10 jours ouvrés)
+    private function prevenirClient(string $numero, string $statut, array $client): void
+    {
+        $bonjour = 'Bonjour' . ($client['prenom'] ? ' ' . $client['prenom'] : '') . ",\n\n";
+        $texte = match ($statut) {
+            'terminee' => $bonjour
+                . "Votre commande $numero est terminée. Merci pour votre confiance !\n\n"
+                . "Votre avis nous aide beaucoup : vous pouvez noter la prestation depuis votre espace client :\n"
+                . getenv('APP_URL') . "/mes-commandes\n\nJulie et José",
+            'attente_retour_materiel' => $bonjour
+                . "Votre commande $numero a été livrée avec du matériel prêté (plateaux, chafing dishes, nappage...).\n\n"
+                . "Merci de nous le restituer sous 10 jours ouvrés. Passé ce délai, des frais de 600 € vous seront "
+                . "facturés, conformément à nos conditions générales de vente.\n\n"
+                . "Pour organiser le retour, contactez-nous : " . getenv('APP_URL') . "/contact\n\nJulie et José",
+            default => null,
+        };
+
+        if ($texte !== null) {
+            Mailer::envoyer($client['email'], "Votre commande $numero : " . libelle_statut($statut), $texte);
+        }
+    }
+
 
     // Annulation après avoir contacté le client : mode de contact et motif obligatoires
     public function annuler(): void
