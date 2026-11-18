@@ -9,6 +9,7 @@ use App\Controller\Controller;
 use App\Controller\MenuController;
 use App\Controller\CompteController;
 use App\Controller\CommandeController;
+use App\Controller\GestionController;
 
 ini_set('display_errors', getenv('APP_ENV') === 'dev' ? '1' : 0);
 
@@ -32,6 +33,10 @@ $routes = [
     '/commander' => [CommandeController::class, 'commander'],
     '/mes-commandes' => [CommandeController::class, 'mesCommandes'],
     '/mes-commandes/annuler' => [CommandeController::class, 'annuler'],
+    '/gestion/commandes' => [GestionController::class, 'commandes'],
+    '/gestion/commandes/avancer' => [GestionController::class, 'avancer'],
+    '/gestion/commandes/annuler' => [GestionController::class, 'annuler'],
+
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';

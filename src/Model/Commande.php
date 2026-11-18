@@ -125,6 +125,117 @@ final class Commande
         $pdo->rollBack();
         throw $e;
     }
-}
+    }
 
+    // Étape suivante d'une commande (null : terminée ou annulée, plus rien à faire)
+    public static function statutSuivant(string $statut, bool $pretMateriel): ?string
+    {
+        return match ($statut) {
+            'en_attente' => 'accepte',
+            'accepte' => 'en_preparation',
+            'en_preparation' => 'en_livraison',
+            'en_livraison' => 'livre',
+            'livre' => $pretMateriel ? 'attente_retour_materiel' : 'terminee',
+            'attente_retour_materiel' => 'terminee',
+            default => null,
+        };
+    }
+
+    // Toutes les commandes (espace employé). Filtres facultatifs : statut, client (nom, prénom ou email)
+    public static function toutes(?string $statut, ?string $client): array
+    {
+        $sql = 'SELECT c.numero_commande, c.date_prestation, c.heure_livraison, c.nombre_personne, c.prix_total,
+                       c.statut, c.pret_materiel, c.ville_prestation, c.motif_annulation,
+                       m.titre AS menu_titre, u.nom, u.prenom, u.email, u.telephone
+                FROM commande c
+                JOIN menu m ON m.menu_id = c.menu_id
+                JOIN utilisateur u ON u.utilisateur_id = c.utilisateur_id
+                WHERE TRUE';
+        $parametres = [];
+
+        if ($statut !== null) {
+            $sql .= ' AND c.statut = :statut';
+            $parametres['statut'] = $statut;
+        }
+        if ($client !== null) {
+            // % et _ tapés par l'employé sont cherchés tels quels (pas comme jokers)
+            $sql .= ' AND (u.nom ILIKE :client OR u.prenom ILIKE :client OR u.email ILIKE :client)';
+            $parametres['client'] = '%' . addcslashes($client, '%_\\') . '%';
+        }
+
+        $sql .= ' ORDER BY c.date_prestation, c.heure_livraison';
+
+        $requete = Database::connexion()->prepare($sql);
+        $requete->execute($parametres);
+
+        return $requete->fetchAll();
+    }
+
+    // Fait avancer la commande d'une étape, seulement si elle est encore au statut que l'employé a vu.
+    // Renvoie le nouveau statut, ou null si refusé (déjà avancée par un collègue, double-clic, terminée...).
+    public static function avancer(string $numero, string $statutVu): ?string
+    {
+        $pdo = Database::connexion();
+        $pdo->beginTransaction();
+
+        try {
+            // FOR UPDATE : la ligne est verrouillée jusqu'au commit, un 2e employé attend son tour
+            $requete = $pdo->prepare(
+                'SELECT pret_materiel FROM commande WHERE numero_commande = :numero AND statut = :statut FOR UPDATE'
+            );
+            $requete->execute(['numero' => $numero, 'statut' => $statutVu]);
+            $commande = $requete->fetch();
+            $suivant = $commande === false ? null : self::statutSuivant($statutVu, $commande['pret_materiel']);
+
+            if ($suivant === null) {
+                $pdo->rollBack();
+                return null;
+            }
+
+            $pdo->prepare('UPDATE commande SET statut = :suivant WHERE numero_commande = :numero')
+                ->execute(['suivant' => $suivant, 'numero' => $numero]);
+            $pdo->prepare('INSERT INTO historique_statut (statut, numero_commande) VALUES (:statut, :numero)')
+                ->execute(['statut' => $suivant, 'numero' => $numero]);
+
+            $pdo->commit();
+            return $suivant;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    // Annulation par l'employé après avoir contacté le client (énoncé : motif et mode de contact obligatoires).
+    // Possible tant que la commande n'est pas partie en livraison ; le stock est rendu.
+    public static function annulerParEmploye(string $numero, string $motif, string $modeContact): bool
+    {
+        $pdo = Database::connexion();
+        $pdo->beginTransaction();
+
+        try {
+            $requete = $pdo->prepare(
+                "UPDATE commande SET statut = 'annulee', motif_annulation = :motif, mode_contact = :mode
+                 WHERE numero_commande = :numero AND statut IN ('en_attente', 'accepte', 'en_preparation')
+                 RETURNING menu_id"
+            );
+            $requete->execute(['motif' => $motif, 'mode' => $modeContact, 'numero' => $numero]);
+            $menuId = $requete->fetchColumn();
+
+            if ($menuId === false) {
+                $pdo->rollBack();
+                return false;
+            }
+
+            $pdo->prepare('UPDATE menu SET quantite_restante = quantite_restante + 1 WHERE menu_id = :id')
+                ->execute(['id' => $menuId]);
+            $pdo->prepare("INSERT INTO historique_statut (statut, numero_commande) VALUES ('annulee', :numero)")
+                ->execute(['numero' => $numero]);
+
+            $pdo->commit();
+            return true;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
 }
