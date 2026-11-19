@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Database;
+use Throwable;
 
 final class Horaire
 {
@@ -19,5 +20,25 @@ final class Horaire
                 )";
 
         return Database::connexion()->query($sql)->fetchAll();
+    }
+
+        // US-09 : nouveaux horaires des 7 jours, en une seule transaction ; [null, null] = fermé ce jour-là
+    public static function modifier(array $horaires): void
+    {
+        $pdo = Database::connexion();
+        $requete = $pdo->prepare(
+            'UPDATE horaire SET heure_ouverture = :ouverture, heure_fermeture = :fermeture WHERE jour = :jour'
+        );
+        $pdo->beginTransaction();
+
+        try {
+            foreach ($horaires as $jour => [$ouverture, $fermeture]) {
+                $requete->execute(['ouverture' => $ouverture, 'fermeture' => $fermeture, 'jour' => $jour]);
+            }
+            $pdo->commit();
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
     }
 }
