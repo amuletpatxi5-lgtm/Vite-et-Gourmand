@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Model\Horaire;
 
+use App\Model\Utilisateur;
+
 class Controller
 {
     protected function render(string $vue, array $donnees = []): void
@@ -36,9 +38,20 @@ class Controller
     protected function exigerRole(string ...$roles): void
     {
         exiger_connexion();
-        if (!in_array(utilisateur_connecte()['role'], $roles, true)) {
+        $compte = utilisateur_connecte();
+
+        // Compte désactivé par l'administrateur depuis la connexion : la session est coupée tout de suite
+        if (!Utilisateur::estActif($compte['utilisateur_id'])) {
+            $_SESSION = [];
+            session_regenerate_id(true);
+            message_flash("Votre compte a été désactivé. Contactez l'administrateur.");
+            rediriger('/connexion');
+        }
+
+        if (!in_array($compte['role'], $roles, true)) {
             $this->introuvable();
             exit;
         }
     }
+
 }
