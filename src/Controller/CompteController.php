@@ -14,7 +14,7 @@ final class CompteController extends Controller
     private const EMPREINTE_LEURRE = '$2y$10$wyhym0YwysRgKVTVcfuObOtvDIGcv.F91U6fSwEbaszuf.tv.4BFq';
 
     // 10 caractères minimum dont une minuscule, une majuscule, un chiffre et un caractère spécial
-    private const REGLE_MOT_DE_PASSE = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
+        public const REGLE_MOT_DE_PASSE = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
     public function inscription(): void
     {

@@ -29,6 +29,7 @@
                     <?php endif; ?>
                     <?php if ($compte['role'] === 'administrateur'): ?>
                     <li><a href="/admin/statistiques" <?= $actuel === '/admin/statistiques' ? 'aria-current="page"' : '' ?>>Statistiques</a></li>
+                    <li><a href="/admin/employes" <?= $actuel === '/admin/employes' ? 'aria-current="page"' : '' ?>>Employés</a></li>
                     <?php endif; ?>
 
                     <li>
