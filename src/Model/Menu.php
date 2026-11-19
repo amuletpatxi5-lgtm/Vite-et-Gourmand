@@ -107,4 +107,23 @@ final class Menu
 
         return $requete->fetchAll();
     }
+
+    // US-09 : tous les menus, y compris ceux retirés de la vente
+    public static function tousPourGestion(): array
+    {
+        return Database::connexion()->query(
+            'SELECT menu_id, titre, prix_par_personne, quantite_restante, actif FROM menu ORDER BY titre'
+            )->fetchAll();
+    }
+
+    // US-09 : prix, stock et mise en vente d'un menu
+    public static function modifierVente(int $id, string $prix, int $stock, bool $actif): bool
+    {
+        $requete = Database::connexion()->prepare(
+            'UPDATE menu SET prix_par_personne = :prix, quantite_restante = :stock, actif = :actif WHERE menu_id = :id'
+        );
+         $requete->execute(['prix' => $prix, 'stock' => $stock, 'actif' => $actif ? 'true' : 'false', 'id' => $id]);
+
+        return $requete->rowCount() === 1;
+    }
 }
