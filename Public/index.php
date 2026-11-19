@@ -46,6 +46,8 @@ $routes = [
     '/mes-commandes/avis' => [CommandeController::class, 'donnerAvis'],
     '/gestion/avis' => [GestionController::class, 'avis'],
     '/gestion/avis/moderer' => [GestionController::class, 'modererAvis'],
+    '/admin/employes' => [AdminController::class, 'employes'],
+    '/admin/employes/activer' => [AdminController::class, 'activerEmploye'],
 ];
 
 $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
