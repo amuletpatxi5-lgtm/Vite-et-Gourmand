@@ -9,6 +9,8 @@ use App\Stats;
 use Throwable;
 use App\Mailer;
 use App\Model\Avis;
+use App\Model\Horaire;
+use App\Model\Menu;
 
 // US-10 : espace employé (et administrateur) pour suivre et faire avancer les commandes
 final class GestionController extends Controller
@@ -17,6 +19,8 @@ final class GestionController extends Controller
     private const STATUTS = ['en_attente', 'accepte', 'en_preparation', 'en_livraison', 'livre',
         'attente_retour_materiel', 'terminee', 'annulee'];
     private const ANNULABLES = ['en_attente', 'accepte', 'en_preparation'];
+
+    private const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 
     public function commandes(): void
     {
@@ -137,6 +141,68 @@ final class GestionController extends Controller
         
         rediriger('/gestion/avis');
     }
+
+    // US-09 : menus (prix, stock, mise en vente) et horaires sur une seule page
+    public function menus(): void
+    {
+        $this->exigerRole(...self::ROLES);
+        $this->render('gestion/menus', [
+            'titre' => 'Menus et horaires',
+            'menus' => Menu::tousPourGestion(),
+            'horaires' => Horaire::tous(),
+        ]);
+    }
+
+    public function modifierMenu(): void
+    {
+        $this->exigerRole(...self::ROLES);
+        $id = filter_input(INPUT_POST, 'menu_id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $stock = filter_input(INPUT_POST, 'quantite_restante', FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 9999]]);
+        $prix = str_replace(',', '.', $this->champ('prix_par_personne'));
+        $actif = ($_POST['actif'] ?? '') === '1';
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valide() || !$id || !is_int($stock)
+            || !preg_match('/^\d{1,4}(\.\d{1,2})?$/', $prix) || (float) $prix <= 0) {
+            message_flash('Menu non modifié : prix entre 0,01 et 9999,99 €, stock entier positif ou nul.');
+        } elseif (Menu::modifierVente($id, $prix, $stock, $actif)) {
+            message_flash('Menu mis à jour.');
+        } else {
+            message_flash('Menu introuvable.');
+        }
+
+        rediriger('/gestion/menus');
+    }
+
+    public function modifierHoraires(): void
+    {
+        $this->exigerRole(...self::ROLES);
+        $heure = '/^([01]\d|2[0-3]):[0-5]\d$/';
+        $horaires = [];
+
+        foreach (self::JOURS as $jour) {
+            $ouverture = $this->champ("ouverture_$jour");
+            $fermeture = $this->champ("fermeture_$jour");
+
+            if ($ouverture === '' && $fermeture === '') {
+                $horaires[$jour] = [null, null];   // fermé ce jour-là
+            } elseif (preg_match($heure, $ouverture) && preg_match($heure, $fermeture) && $ouverture < $fermeture) {
+                $horaires[$jour] = [$ouverture, $fermeture];
+            } else {
+                message_flash("Horaires non enregistrés : le $jour, indiquez l'ouverture et la fermeture (dans cet ordre), ou laissez les deux vides si vous êtes fermés.");
+                rediriger('/gestion/menus#horaires');
+            }
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valide()) {
+            message_flash('Action impossible : rechargez la page et réessayez.');
+        } else {
+            Horaire::modifier($horaires);
+            message_flash('Horaires enregistrés : ils sont affichés en bas de chaque page.');
+        }
+
+        rediriger('/gestion/menus#horaires');
+    }
+
 
 
     // Numéro de commande d'un formulaire POST protégé ; sinon retour à la liste

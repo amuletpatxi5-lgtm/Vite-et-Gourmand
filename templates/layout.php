@@ -26,6 +26,7 @@
                     <?php if (in_array($compte['role'], ['employe', 'administrateur'], true)): ?>
                     <li><a href="/gestion/commandes" <?= $actuel === '/gestion/commandes' ? 'aria-current="page"' : '' ?>>Gestion</a></li>
                     <li><a href="/gestion/avis" <?= $actuel === '/gestion/avis' ? 'aria-current="page"' : '' ?>>Avis</a></li>
+                    <li><a href="/gestion/menus" <?= $actuel === '/gestion/menus' ? 'aria-current="page"' : '' ?>>Menus et horaires</a></li>
                     <?php endif; ?>
                     <?php if ($compte['role'] === 'administrateur'): ?>
                     <li><a href="/admin/statistiques" <?= $actuel === '/admin/statistiques' ? 'aria-current="page"' : '' ?>>Statistiques</a></li>
